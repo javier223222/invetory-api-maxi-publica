@@ -170,7 +170,12 @@ export class CarController {
     public update = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { id } = req.params;
+            if (req.body.anio){
+                req.body.año = parseInt(req.body.anio);
+                delete req.body.anio;
+            }
             const carData: Partial<Car> = req.body;
+            
 
             const useCase = new UpdateCarUseCase(this.carRepository);
             const updatedCar = await useCase.execute(id, carData);
