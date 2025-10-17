@@ -7,11 +7,11 @@ export class FindCarByIdUseCase {
 
     async execute(id: string): Promise<Car> {
         if(!ObjectId.isValid(id)){
-           throw new BadRequestError(`El ID '${id}' no es un ObjectId válido.`);
+           throw new BadRequestError(`The ID '${id}' is not a valid ObjectId`, `El ID '${id}' no es un ObjectId válido`);
         }
         const car = await this.carRepository.findById(id);
         if (!car) {
-            throw new NotFoundError(`Carro con ID ${id} no encontrado.`);
+            throw new NotFoundError(`Car with ID ${id} not found`, `Carro con ID ${id} no encontrado`);
         }
         return car;
     }

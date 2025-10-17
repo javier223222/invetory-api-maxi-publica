@@ -1,2 +1,3 @@
 import { CarController } from "./car.controller";
-export {CarController}
+import { UserController } from "./user.controller";
+export {CarController, UserController}

@@ -1,9 +1,11 @@
 import { errorHandlerMiddleware } from "./error-handler.middleware";
 import { upload } from "./file-upload.middleware";
-import {validate} from "./validation.middleware";
+import { validate } from "./validation.middleware";
+import { authMiddleware } from "./auth.middleware";
 
 export {
     errorHandlerMiddleware,
     upload,
-    validate
+    validate,
+    authMiddleware
 }

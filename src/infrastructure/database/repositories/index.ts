@@ -1,2 +1,3 @@
 import { CarRepository } from "./car.repository";
-export {CarRepository}
+import { UserRepository } from "./user.repository";
+export {CarRepository, UserRepository}

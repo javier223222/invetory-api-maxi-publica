@@ -8,14 +8,14 @@ export const createCarSchema = z.object({
     modelo: z.string({ error: 'El modelo es requerido.' })
               .min(2, 'El modelo debe tener al menos 2 caracteres.'),
 
-    anio: z.number({ error: 'El año es requerido.' })
+    anio: z.coerce.number({ error: 'El año es requerido.' })
            .int()
            .min(1900, 'El año debe ser mayor a 1900.'),
 
-    precio: z.number({ error: 'El precio es requerido.' })
+    precio: z.coerce.number({ error: 'El precio es requerido.' })
               .positive('El precio debe ser un valor positivo.'),
 
-    kilometraje: z.number({ error: 'El kilometraje es requerido.' })
+    kilometraje: z.coerce.number({ error: 'El kilometraje es requerido.' })
                    .min(100, 'El kilometraje debe ser mayor a 100.'),
 
     email: z.string({ error: 'El email es requerido.' })
@@ -26,3 +26,5 @@ export const createCarSchema = z.object({
 
     color: z.string().optional(),
 });
+
+export const updateCarSchema = createCarSchema.partial();

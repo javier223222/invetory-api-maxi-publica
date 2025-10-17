@@ -1,5 +1,5 @@
 import { ICarRepository } from "core/ports";
-import { Car } from "core/entities/car.entity";
+import { Car } from "core/entities";
 import { AppDataSource } from "../data-source";
 import { Repository, MoreThanOrEqual, LessThanOrEqual, Between, Like, IsNull, FindOptionsWhere } from "typeorm";
 import { ObjectId } from "mongodb";
@@ -14,7 +14,7 @@ export class CarRepository implements ICarRepository {
         const { page = 1, limit = 10 } = pagination;
         const skip = (page - 1) * limit;
 
-        const whereClause: FindOptionsWhere<Car> = { fechaDeEliminacion: IsNull() };
+        const whereClause: FindOptionsWhere<Car> = { fechaDeEliminacion: undefined };
 
         if (filters.marca) {
             whereClause.marca = Like(`%${filters.marca}%`);
@@ -35,6 +35,7 @@ export class CarRepository implements ICarRepository {
         } else if (filters.precioMax) {
             whereClause.precio = LessThanOrEqual(filters.precioMax);
         }
+       
 
         const [data, total] = await this.repository.findAndCount({
             where: whereClause,
@@ -49,16 +50,15 @@ export class CarRepository implements ICarRepository {
         const hasPrev = page > 1;
 
         return {
-            data,
-            pagination:{
-                page,
-                limit,
-                total,
-                totalPages,
-                hasNext,
-                hasPrev
+            items: data,
+            page,
+            limit,
+            total,
+            totalPages,
+            hasNext,
+            hasPrev
                 
-            }
+            
 
         }
     }

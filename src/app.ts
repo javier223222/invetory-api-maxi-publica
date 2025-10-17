@@ -1,7 +1,7 @@
 import express,{Express,Request,Response} from "express";
 import cors from "cors";
 import { errorHandlerMiddleware } from "api/middlewares";
-import { carRoutes } from "api/routes";
+import { carRoutes, userRoutes } from "api/routes";
 
 const app:Express=express()
 
@@ -16,5 +16,7 @@ app.get("/api/health",(req:Request,res:Response)=>{
     })
 })
 app.use("/api/autos",carRoutes)
+app.use("/api/usuarios",userRoutes) 
+
 app.use(errorHandlerMiddleware)
 export default app

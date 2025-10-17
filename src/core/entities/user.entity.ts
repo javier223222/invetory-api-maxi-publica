@@ -27,4 +27,8 @@ export class User {
         const salt = await bcrypt.genSalt(config.SALTS_ROUNDS);
         this.password = await bcrypt.hash(this.password, salt);
     }
+
+    async comparePassword(password: string): Promise<boolean> {
+        return await bcrypt.compare(password, this.password);
+    }
 }

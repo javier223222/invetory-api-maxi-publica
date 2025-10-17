@@ -1,8 +1,13 @@
-import { PaginationMetaDto } from "./pagination-meta.dto";
+
 
 export interface PaginationResponseDto<T> {
     
-    data: T[] ;
-    pagination : PaginationMetaDto;
+    items: T[] ;
+    page: number ;
+    limit: number ;
+    total: number ;
+    totalPages: number ;
+    hasNext: boolean ;
+    hasPrev: boolean ;
 }
 
