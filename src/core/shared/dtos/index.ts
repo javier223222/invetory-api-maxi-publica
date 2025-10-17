@@ -5,6 +5,7 @@ import { PaginationOptionsDto } from "./pagination-options.dto";
 import { CreateUserDto } from "./create-user.dto";
 import { LoginDto } from "./login.dto";
 import { LoginResponseDto } from "./login-response.dto";
+import { YearRangeDto } from "./year-range.dto";
 
 export {
     CarFilterOptionsDto,
@@ -13,5 +14,6 @@ export {
     LoginDto,
     LoginResponseDto,
     PaginationResponseDto,
-    PaginationOptionsDto
+    PaginationOptionsDto,
+    YearRangeDto
 }
