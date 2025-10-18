@@ -1,13 +1,21 @@
 import express,{Express,Request,Response} from "express";
 import cors from "cors";
 import swaggerUi from "swagger-ui-express";
-import { errorHandlerMiddleware } from "api/middlewares";
-import { carRoutes, userRoutes, marcaRoutes, modeloRoutes, yearRoutes } from "api/routes";
+import { errorHandlerMiddleware, httpLoggerMiddleware } from "./api/middlewares";
+import { carRoutes, userRoutes, marcaRoutes, modeloRoutes, yearRoutes } from "./api/routes";
 import { swaggerSpec } from "./infrastructure/web/express/swagger.config";
+import { config } from "./config";
 
 const app:Express=express()
 
-app.use(cors());
+// Middleware de logging HTTP (debe estar antes de las rutas)
+app.use(httpLoggerMiddleware);
+
+app.use(cors({
+    origin: config.allowedOrigins,
+    credentials: true
+}));
+
 app.use(express.json())
 app.use(express.static("public"))
 

@@ -22,7 +22,7 @@ describe('CarController - create', () => {
             body: {},
             file: undefined,
             protocol: 'http',
-            get: jest.fn().mockReturnValue('localhost:3000')
+            get: jest.fn().mockReturnValue('localhost:3001')
         };
 
         mockResponse = {
@@ -67,7 +67,7 @@ describe('CarController - create', () => {
                 email: 'vendedor@example.com',
                 telefono: '9611879041',
                 color: 'Rojo',
-                fotografia: 'http://localhost:3000/uploads/cars/car-12345.jpg',
+                fotografia: 'http://localhost:3001/uploads/cars/car-12345.jpg',
                 fechaDeAlta: new Date(),
                 fechaDeModificacion: new Date(),
                 fechaDeEliminacion: null
@@ -94,7 +94,7 @@ describe('CarController - create', () => {
                     email: 'vendedor@example.com',
                     telefono: '9611879041',
                     color: 'Rojo',
-                    fotografia: 'http://localhost:3000/uploads/cars/car-12345.jpg'
+                    fotografia: 'http://localhost:3001/uploads/cars/car-12345.jpg'
                 })
             );
 
@@ -183,7 +183,7 @@ describe('CarController - create', () => {
             const mockCar = new Car();
             Object.assign(mockCar, {
                 id: '507f1f77bcf86cd799439013',
-                fotografia: 'http://localhost:3000/uploads/cars/car-67890.jpeg'
+                fotografia: 'http://localhost:3001/uploads/cars/car-67890.jpeg'
             });
 
             const mockExecute = jest.fn().mockResolvedValue(mockCar);
@@ -199,7 +199,7 @@ describe('CarController - create', () => {
 
             expect(mockExecute).toHaveBeenCalledWith(
                 expect.objectContaining({
-                    fotografia: 'http://localhost:3000/uploads/cars/car-67890.jpeg'
+                    fotografia: 'http://localhost:3001/uploads/cars/car-67890.jpeg'
                 })
             );
 

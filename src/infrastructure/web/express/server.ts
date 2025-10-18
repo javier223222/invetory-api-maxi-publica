@@ -1,19 +1,31 @@
 import "reflect-metadata";
-import "tsconfig-paths/register";
-import app from "app";
-import {config} from "config";
-import { initializeDatabase } from "infrastructure/database/data-source";
+import app from "../../../app";
+import {config} from "../../../config";
+import { initializeDatabase } from "../../database/data-source";
+import { logger } from "../../services";
 
 async function main() {
     try{
+        logger.info(' Starting Inventory API Server...', {
+            nodeEnv: config.nodeEnv,
+            port: config.port,
+        });
 
-        await initializeDatabase()
+        await initializeDatabase();
+        
         app.listen(config.port,()=>{
-            console.log(`Servidor corriendo en http://localhost:${config.port}`  );
-        })
+            logger.info(` Server running successfully`, {
+                url: `http://localhost:${config.port}`,
+                docs: `http://localhost:${config.port}/api-docs`,
+                environment: config.nodeEnv,
+            });
+        });
 
     }catch(error){
-        console.error("no se puedo inciar el servidor",error)
+        logger.error(' Failed to start server', {
+            error: error instanceof Error ? error.message : 'Unknown error',
+            stack: error instanceof Error ? error.stack : undefined,
+        });
         process.exit(1)
     }
 }

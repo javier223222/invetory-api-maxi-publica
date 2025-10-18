@@ -64,14 +64,14 @@ export class CarRepository implements ICarRepository {
     }
     async findById(id: string): Promise<Car | null> {
 
-       let result  =await this.repository.findOne({
+       const result = await this.repository.findOne({
         where:{
             _id: new ObjectId(id),
             fechaDeEliminacion: null
         } as any
             
 
-       }) ;
+       });
        const car = result ? result : null;
            
 

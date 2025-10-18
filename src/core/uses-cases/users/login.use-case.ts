@@ -27,7 +27,7 @@ export class LoginUseCase {
                 email: user.email 
             },
             config.jwtSecret,
-            { expiresIn: '24h' }
+            { expiresIn: config.jwtExpiration } as jwt.SignOptions
         );
 
         return {

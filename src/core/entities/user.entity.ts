@@ -24,7 +24,7 @@ export class User {
 
     @BeforeInsert()
     async hashPassword() {
-        const salt = await bcrypt.genSalt(config.SALTS_ROUNDS);
+        const salt = await bcrypt.genSalt(config.saltRounds);
         this.password = await bcrypt.hash(this.password, salt);
     }
 

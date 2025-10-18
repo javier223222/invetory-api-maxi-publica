@@ -4,8 +4,8 @@ import { validate, authMiddleware } from "api/middlewares";
 import { upload } from "api/middlewares";
 import { createCarSchema,carFilterSchema,updateCarSchema } from "api/dtos";
 
-const router:Router=Router();
-const carController=new CarController();
+const router: Router = Router();
+const carController = new CarController();
 router.use(authMiddleware);
 
 /**
@@ -392,7 +392,7 @@ router.get(
  *         description: Filtrar por modelo
  *         example: Corolla
  *       - in: query
- *         name: año
+ *         name: anio
  *         schema:
  *           type: number
  *         description: Filtrar por año

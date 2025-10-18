@@ -2,6 +2,8 @@
 import { DataSource } from "typeorm";
 import { config } from "../../config";
 import { Car,Marca,Modelo,User } from "core/entities";
+import { logger } from "../services";
+
 export const AppDataSource=new DataSource({
     type:"mongodb",
     url:config.mongoUri,
@@ -17,11 +19,21 @@ export const AppDataSource=new DataSource({
 export async function initializeDatabase() {
     try{
         if(!AppDataSource.isInitialized){
-            await AppDataSource.initialize()
-            console.log("Conexion a mongoDb establecido correctamente")
+            const startTime = Date.now();
+            await AppDataSource.initialize();
+            const duration = Date.now() - startTime;
+            
+            logger.info('Database connection established successfully', {
+                type: 'mongodb',
+                duration: `${duration}ms`,
+                database: config.mongoUri.split('/').pop()?.split('?')[0] || 'unknown',
+            });
         }
     }catch(error){
-        console.error("Error durante la inicializacion de la base de datos: ")
+        logger.error('Database initialization failed', {
+            error: error instanceof Error ? error.message : 'Unknown error',
+            stack: error instanceof Error ? error.stack : undefined,
+        });
         process.exit(1)
     }
     

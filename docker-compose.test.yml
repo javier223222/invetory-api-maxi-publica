@@ -1,0 +1,14 @@
+services:
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    env_file:
+      - .env
+    networks:
+      - test_network
+    command: npm test
+
+networks:
+  test_network:
+    driver: bridge

@@ -1,8 +1,12 @@
-import { Entity, ObjectIdColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, ObjectIdColumn, Column, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
 import { UtcDateTransformer } from 'infrastructure/database/transformers/utc-date.transformer';
 import { ObjectId } from 'mongodb';
 
 @Entity('cars') 
+@Index(['marca', 'modelo'])
+@Index(['año'])
+@Index(['precio'])
+@Index(['fechaDeEliminacion'])
 export class Car {
     @ObjectIdColumn()
     id!: ObjectId;

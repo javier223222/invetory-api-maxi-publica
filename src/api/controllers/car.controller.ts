@@ -145,7 +145,7 @@ export class CarController {
             const result = await findCarsUseCase.execute(filters, pagination);
            
             
-            let paginationResponse={
+            const paginationResponse = {
                 items: result.items,
                 page: result.page,
                 limit: result.limit,

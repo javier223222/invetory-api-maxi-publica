@@ -1,287 +1,421 @@
-# Inventory API - Sistema de Gestión de Autos
+# Inventory API
 
-API REST  completa para la gestión de inventario de autos con autenticación JWT, construida con Node.js, TypeScript, Express y MongoDB siguiendo la arquitectura hexagonal.
+API REST para la gestión de inventario de vehículos construida con Node.js, TypeScript, Express y MongoDB, siguiendo principios de arquitectura hexagonal.
 
-##  Tabla de Contenidos
+## Tabla de Contenidos
 
-- [Características](#características)
+- [Descripción General](#descripción-general)
+- [Arquitectura](#arquitectura)
 - [Tecnologías](#tecnologías)
-
+- [Requisitos Previos](#requisitos-previos)
 - [Instalación](#instalación)
 - [Configuración](#configuración)
-- [Uso](#uso)
-- [Documentación de API](#documentación-de-api)
-- [Arquitectura](#arquitectura)
-- [Scripts Disponibles](#scripts-disponibles)
+- [Ejecución](#ejecución)
+- [Testing](#testing)
 - [Estructura del Proyecto](#estructura-del-proyecto)
+- [Endpoints API](#endpoints-api)
+- [Documentación Swagger](#documentación-swagger)
 
 ---
 
-## Características
+## Descripción General
 
--  **CRUD Completo** de autos con soft delete
--  **Autenticación JWT** con tokens seguros
-- **Upload de Imágenes** con Multer
--  **Paginación y Filtros** avanzados
--  **Catálogos** de marcas, modelos y años
--  **Validación de Datos** con Zod
--  **Arquitectura Hexagonal** (Puertos y Adaptadores)
--  **TypeScript** con tipado estricto
--  **MongoDB** con TypeORM
--  **Documentación Swagger** interactiva
--  **Manejo de Errores** consistente y bilingüe (EN/ES)
--  **CORS** habilitado
+Sistema backend completo para la gestión de un inventario de vehículos que permite operaciones CRUD sobre automóviles, gestión de usuarios con autenticación JWT, y catálogos de marcas, modelos y años. El proyecto implementa mejores prácticas de desarrollo, incluyendo validación de datos, manejo de errores, logging estructurado y despliegue con Docker.
+
+### Características Principales
+
+- Autenticación y autorización mediante JSON Web Tokens
+- CRUD completo de vehículos con soft delete
+- Gestión de imágenes con almacenamiento local
+- Paginación y filtros avanzados para consultas
+- Catálogos dinámicos de marcas, modelos y años disponibles
+- Validación exhaustiva de datos con Zod
+- Logging estructurado con Winston y rotación de archivos
+- Rate limiting para prevención de abuso
+- Documentación interactiva con Swagger UI
+- Suite de tests automatizados con Jest
+- Despliegue containerizado con Docker Compose
 
 ---
 
-##  Tecnologías
+## Arquitectura
 
-### Backend
-- **Node.js** v18+
-- **TypeScript** v5.9
-- **Express** v5.1
-- **TypeORM** v0.3
-- **MongoDB** v6.20
+El proyecto sigue una arquitectura hexagonal (Puertos y Adaptadores) que separa la lógica de negocio de los detalles de implementación, facilitando el mantenimiento y la testabilidad.
+
+### Capas Principales
+
+**Core (Dominio)**
+- Entidades: Representaciones de los conceptos del negocio
+- Casos de uso: Lógica de aplicación independiente de frameworks
+- Puertos: Interfaces que definen contratos de comunicación
+- DTOs: Objetos de transferencia de datos
+
+**Infrastructure (Infraestructura)**
+- Adaptadores de base de datos: Implementaciones concretas con TypeORM
+- Servicios externos: Logging, almacenamiento de archivos
+- Configuración de servidor Express
+
+**API (Presentación)**
+- Controllers: Manejo de peticiones HTTP
+- Middlewares: Autenticación, validación, logging, manejo de errores
+- Routes: Definición de endpoints
+- DTOs de validación: Schemas con Zod
+
+### Principios Aplicados
+
+- Inversión de dependencias
+- Separación de responsabilidades
+- Inyección de dependencias
+- Desacoplamiento entre capas
+
+---
+
+## Tecnologías
+
+### Runtime y Lenguaje
+- Node.js 22.x
+- TypeScript 5.9.3
+
+### Framework y Servidor
+- Express 5.1.0
+- CORS habilitado
+
+### Base de Datos
+- MongoDB 7
+- TypeORM 0.3.20
+- Reflect Metadata
 
 ### Autenticación y Seguridad
-- **jsonwebtoken** - JWT tokens
-- **bcryptjs** - Hash de contraseñas
+- JSON Web Token
+- bcryptjs para hashing de contraseñas
+- express-rate-limit
 
 ### Validación
-- **Zod** v4.1 - Validación de schemas
+- Zod 4.1
+
+### Logging
+- Winston 3.11
+- winston-daily-rotate-file
+
+### Manejo de Archivos
+- Multer
 
 ### Documentación
-- **Swagger UI Express** - Documentación interactiva
-- **Swagger JSDoc** - Generación de docs
+- swagger-ui-express
+- swagger-jsdoc
 
-### Utilidades
-- **Multer** - Upload de archivos
-- **dotenv** - Variables de entorno
-- **cors** - Cross-Origin Resource Sharing
+### Testing
+- Jest 29.7
+- ts-jest
+
+### Desarrollo
+- ts-node-dev
+- dotenv
+- tsc-alias
+
+### Containerización
+- Docker
+- Docker Compose
 
 ---
 
+## Requisitos Previos
 
-##  Instalación
+### Opción 1: Docker (Recomendado)
+- Docker 20.x o superior
+- Docker Compose 2.x o superior
 
-1. **Clonar el repositorio**
+### Opción 2: Instalación Local
+- Node.js 22.x o superior
+- MongoDB 7.x o superior
+- npm o yarn
+
+---
+
+## Instalación
+
+### Con Docker
+
+**IMPORTANTE**: Es obligatorio crear un archivo `.env` antes de ejecutar Docker. El contenedor no iniciará sin este archivo.
+
 ```bash
-git clone <url-del-repositorio>
+# Clonar el repositorio
+git clone <repository-url>
 cd inventory_api
-```
 
-2. **Instalar dependencias**
-```bash
-npm install
-```
-
-3. **Configurar variables de entorno**
-```bash
+# PASO CRÍTICO: Crear archivo de variables de entorno
 cp .env.example .env
+
+# Editar .env con tus valores (especialmente JWT_SECRET y credenciales de MongoDB)
+# nano .env  # o usar cualquier editor
+
+# Construir y levantar los contenedores
+docker-compose up -d --build
 ```
 
-Edita el archivo `.env`:
+### Instalación Local
+
+```bash
+# Clonar el repositorio
+git clone <repository-url>
+cd inventory_api
+
+# Instalar dependencias
+npm install
+
+# Crear archivo de variables de entorno
+cp .env.example .env
+
+# Compilar TypeScript
+npm run build
+```
+
+---
+
+## Configuración
+
+El proyecto utiliza variables de entorno para su configuración. Crear un archivo `.env` en la raíz del proyecto basado en `.env.example`:
+
 ```env
-PORT=3000
-MONGO_URI=mongodb://admin:admin123@localhost:27017/inventory_db?authSource=admin
-JWT_SECRET=tu_secreto_super_seguro_aqui_cambiar_en_produccion
+# Aplicación
+NODE_ENV=development
+PORT=3001
+
+# Base de Datos MongoDB
+MONGO_URI=mongodb://admin:admin123@mongodb:27017/inventory_db?authSource=admin
+MONGO_ROOT_USER=admin
+MONGO_ROOT_PASSWORD=admin123
+MONGO_DATABASE=inventory_db
+MONGO_PORT=27017
+
+# Autenticación JWT
+JWT_SECRET=your-secret-key-min-32-characters
+JWT_EXPIRATION=24h
+
+# Seguridad
 SALTS_ROUNDS=10
+
+# Archivos
+MAX_FILE_SIZE=5242880
+ALLOWED_FILE_TYPES=image/jpeg,image/png,image/webp
+
+# CORS
+ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001
 ```
 
-4. **Poblar base de datos** (opcional)
+### Variables de Entorno
+
+**NODE_ENV**: Entorno de ejecución (development, production)  
+**PORT**: Puerto del servidor HTTP  
+**MONGO_URI**: Cadena de conexión completa a MongoDB  
+**MONGO_ROOT_USER**: Usuario root de MongoDB  
+**MONGO_ROOT_PASSWORD**: Contraseña del usuario root  
+**MONGO_DATABASE**: Nombre de la base de datos  
+**MONGO_PORT**: Puerto de MongoDB  
+**JWT_SECRET**: Secreto para firmar tokens JWT (mínimo 32 caracteres)  
+**JWT_EXPIRATION**: Tiempo de expiración de tokens  
+**SALTS_ROUNDS**: Número de rondas para bcrypt  
+**MAX_FILE_SIZE**: Tamaño máximo de archivo en bytes  
+**ALLOWED_FILE_TYPES**: Tipos MIME permitidos para imágenes  
+**ALLOWED_ORIGINS**: Orígenes permitidos para CORS
+
+---
+
+## Ejecución
+
+### Con Docker
+
 ```bash
-npm run seed
+# Iniciar servicios
+docker-compose up -d
+
+# Ver logs
+docker logs -f inventory_api
+
+# Detener servicios
+docker-compose down
+
+# Reiniciar limpiando volúmenes
+docker-compose down -v
+docker-compose up -d --build
 ```
 
-Esto creará:
-- 10 marcas de autos
-- 50 modelos (5 por marca)
+El servidor estará disponible en `http://localhost:3001`
 
-5. **Iniciar el servidor**
+### Desarrollo Local
+
 ```bash
+# Modo desarrollo con hot reload
 npm run dev
+
+# Compilar y ejecutar
+npm run build
+npm start
 ```
 
-El servidor estará corriendo en `http://localhost:3000`
+### Seed de Datos
+
+Al utilizar Docker, el seed se ejecuta automáticamente al iniciar el contenedor. Para ejecutarlo manualmente:
+
+```bash
+# Local
+npm run seed
+
+# Docker (si no se ejecutó automáticamente)
+docker exec inventory_api node dist/infrastructure/database/seed.js
+```
+
+El seed inicializa:
+- Usuario de prueba (admin@example.com / admin123)
+- 10 marcas de vehículos
+- 50 modelos (5 por marca)
+- Rango de años disponibles (2015-2025)
 
 ---
 
-## Documentación de API
+## Testing
 
-###  Swagger UI (Recomendado)
+### Ejecutar Tests
 
-Accede a la documentación interactiva en:
+```bash
+# Todos los tests
+npm test
 
+# Con coverage
+npm run test:coverage
+
+# Modo watch
+npm run test:watch
+
+# Tests en Docker
+npm run test:docker
 ```
-http://localhost:3000/api-docs
-```
 
-**Características de Swagger:**
--  Prueba todos los endpoints desde el navegador
--  Configura autenticación JWT fácilmente
--  Ve ejemplos de peticiones y respuestas
--  Exporta especificación OpenAPI
+### Suite de Tests
 
+El proyecto incluye 33 tests que cubren:
 
+**Use Cases**
+- Creación de vehículos
+- Actualización de vehículos
+- Eliminación de vehículos
+- Búsqueda con filtros y paginación
+- Gestión de fotos
 
-###  Documentación por Módulo
+**Controllers**
+- Validación de datos de entrada
+- Manejo de errores
+- Respuestas HTTP correctas
 
-- [**Autenticación**](./AUTH_README.md) - Login, registro y JWT
-- [**Catálogos**](./CATALOG_API.md) - Marcas, modelos y años
+**Validaciones**
+- Schemas de creación y actualización
+- Filtros de búsqueda
+- Autenticación
 
 ---
 
-##  Arquitectura
-
-Este proyecto sigue la **Arquitectura Hexagonal** (Puertos y Adaptadores):
+## Estructura del Proyecto
 
 ```
-src/
-├── core/                      # DOMAIN LAYER
-│   ├── entities/             # Entidades de negocio
-│   ├── ports/                # Interfaces (contratos)
-│   ├── uses-cases/           # Lógica de negocio
-│   └── shared/
-│       ├── dtos/             # Data Transfer Objects
-│       └── errors/           # Errores de dominio
+inventory_api/
+├── src/
+│   ├── api/
+│   │   ├── controllers/       # Controladores HTTP
+│   │   ├── dtos/              # Schemas de validación
+│   │   ├── middlewares/       # Auth, validación, logging, errores
+│   │   └── routes/            # Definición de rutas
+│   │
+│   ├── core/
+│   │   ├── entities/          # Entidades del dominio
+│   │   ├── ports/             # Interfaces de repositorios
+│   │   ├── shared/
+│   │   │   ├── dtos/          # DTOs del dominio
+│   │   │   └── errors/        # Errores personalizados
+│   │   └── uses-cases/        # Lógica de aplicación
+│   │
+│   ├── infrastructure/
+│   │   ├── database/
+│   │   │   ├── repositories/  # Implementaciones de repositorios
+│   │   │   ├── transformers/  # Mapeo entidad-modelo
+│   │   │   ├── data-source.ts # Configuración TypeORM
+│   │   │   └── seed.ts        # Inicialización de datos
+│   │   ├── services/          # Logger, almacenamiento
+│   │   └── web/
+│   │       └── express/       # Configuración del servidor
+│   │
+│   ├── test/                  # Tests unitarios y de integración
+│   ├── app.ts                 # Configuración de Express
+│   └── config/                # Configuración centralizada
 │
-├── infrastructure/           # INFRASTRUCTURE LAYER
-│   ├── database/
-│   │   ├── repositories/    # Implementaciones de puertos
-│   │   └── data-source.ts   # Configuración TypeORM
-│   ├── services/            # Servicios externos
-│   └── web/
-│       └── express/         # Configuración Express/Swagger
-│
-└── api/                      # APPLICATION LAYER
-    ├── controllers/          # Controladores HTTP
-    ├── routes/              # Definición de rutas
-    ├── middlewares/         # Middlewares
-    └── dtos/                # Validaciones y schemas
-```
-
-### Capas
-
-#### 1. **Domain Layer (Core)**
-- Contiene la lógica de negocio pura
-- Independiente de frameworks y tecnologías
-- Define contratos (ports) e implementa casos de uso
-
-#### 2. **Infrastructure Layer**
-- Implementa los puertos definidos en el dominio
-- Maneja conexiones a base de datos
-- Servicios externos (archivos, email, etc.)
-
-#### 3. **Application Layer (API)**
-- Expone los casos de uso como endpoints HTTP
-- Maneja peticiones y respuestas
-- Validaciones de entrada
-
----
-
-## API Endpoints
-
-### Health Check
-
-#### GET /api/health
-Verifica el estado del servidor.
-
-**Autenticación:** No requerida
-
-**Response 200:**
-```json
-{
-  "status": "UP"
-}
+├── dist/                      # Código compilado
+├── logs/                      # Logs de la aplicación
+├── public/uploads/            # Archivos subidos
+├── docker-compose.yml         # Orquestación de contenedores
+├── docker-compose.test.yml    # Configuración para tests
+├── Dockerfile                 # Imagen de producción
+├── Dockerfile.test            # Imagen de tests
+├── .dockerignore
+├── jest.config.js
+├── tsconfig.json
+└── package.json
 ```
 
 ---
+
+## Endpoints API
+
+La API expone los siguientes endpoints REST. Todos los endpoints (excepto autenticación y salud) requieren autenticación mediante JWT en el header `Authorization: Bearer <token>`.
 
 ### Autenticación
 
-#### POST /api/usuarios/login
-Inicia sesión y retorna un token JWT.
+#### POST `/api/usuarios/`
+Registro de nuevo usuario en el sistema.
 
-**Autenticación:** No requerida
-
-**Request Body:**
+**Body:**
 ```json
 {
-  "email": "user@example.com",
-  "password": "123456"
+   "email":"testzzz@test.com","password":"ELTopn4590@"
 }
 ```
 
-**Validaciones:**
-- `email`: debe ser un email válido
-- `password`: mínimo 6 caracteres
-
-**Response 200:**
-```json
-{
-    "status": 200,
-    "message": "Login exitoso.",
-    "data": {
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZjIzZjRkNzhkZmNiNGVkYWY5NmZmMSIsImVtYWlsIjoidGVzdEB0ZXN0LmNvbSIsImlhdCI6MTc2MDcxNDMxMSwiZXhwIjoxNzYwODAwNzExfQ.Rvy3hzd6U8vnwlYF-d1wVezEFVybKxMGIVVzBQVN1HU",
-        "user": {
-            "id": "68f23f4d78dfcb4edaf96ff1",
-            "email": "test@test.com"
-        }
-    }
-}
-```
-
-**Response 401:**
-```json
-{
-  "status": 401,
-  "name": "Unauthorized",
-  "message": "Invalid credentials",
-  "customMessage": "Credenciales inválidas"
-}
-```
-
----
-
-#### POST /api/usuarios
-Registra un nuevo usuario en el sistema.
-
-**Autenticación:** No requerida
-
-**Request Body:**
-```json
-{
-  "email": "newuser@example.com",
-  "password": "securepass123"
-}
-```
-
-**Validaciones:**
-- `email`: debe ser único y válido
-- `password`: mínimo 6 caracteres
-
-**Response 201:**
+**Response (201):**
 ```json
 {
     "status": 201,
     "message": "User created successfully.",
     "data": {
-        "id": "68f23f4d78dfcb4edaf96ff1",
-        "email": "test@test.com",
+        "id": "68f2f2c4403113ea27a41b4d",
+        "email": "testzzz@test.com",
         "password": "",
-        "createdAt": "2025-10-17T13:06:21.197Z",
-        "updatedAt": "2025-10-17T13:06:21.197Z"
+        "createdAt": "2025-10-18T01:52:04.817Z",
+        "updatedAt": "2025-10-18T01:52:04.817Z"
     }
 }
 ```
 
-**Response 400:**
+#### POST `/api/users/login`
+Autenticación de usuario existente.
+
+**Body:**
 ```json
 {
-  "status": 400,
-  "name": "Bad Request",
-  "message": "Email already exists",
-  "customMessage": "El email ya existe"
+  "email": "user@example.com",
+  "password": "securePassword123"
+}
+```
+
+**Response (200):**
+```json
+{
+    "status": 200,
+    "message": "Login exitoso.",
+    "data": {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZjJkYzg0YjU0MWFiMTc2ZGEyNmQ2YyIsImVtYWlsIjoidGVzdHp6ekB0ZXN0LmNvbSIsImlhdCI6MTc2MDc0NjY5NywiZXhwIjoxNzYwODMzMDk3fQ.2jEItU8dkfCbLMiljCixMSjjv3NcSWo_THG5C3LyeG0",
+        "user": {
+            "id": "68f2dc84b541ab176da26d6c",
+            "email": "testzzz@test.com"
+        }
+    }
 }
 ```
 
@@ -933,74 +1067,184 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 ---
 
-## 📝 Scripts Disponibles
+## Documentación Swagger
+
+El proyecto implementa **Swagger UI** para documentación interactiva completa de la API.
+
+### Acceso a Swagger
+
+Una vez que el servidor está corriendo, la documentación está disponible en:
+
+```
+http://localhost:3001/api-docs
+```
+
+### Características de Swagger
+
+**Exploración Interactiva:**
+- Visualización de todos los endpoints disponibles
+- Schemas detallados de request y response
+- Ejemplos de uso para cada endpoint
+- Códigos de respuesta HTTP documentados
+
+**Testing en Vivo:**
+- Ejecutar peticiones directamente desde el navegador
+- Probar diferentes parámetros y body
+- Ver respuestas en tiempo real
+
+**Autenticación JWT:**
+- Botón "Authorize" en la parte superior
+- Ingresar token JWT obtenido del login
+- Token se incluye automáticamente en todas las peticiones
+
+**Uso:**
+1. Abrir `http://localhost:3001/api-docs`
+2. Hacer login en `/api/users/login` para obtener token
+3. Copiar el token de la respuesta
+4. Hacer clic en "Authorize" en Swagger UI
+5. Pegar el token en el campo (sin "Bearer")
+6. Probar cualquier endpoint protegido
+
+---
+
+## Logging
+
+El sistema implementa logging estructurado con Winston:
+
+### Niveles de Log
+- error: Errores de aplicación
+- warn: Advertencias
+- info: Información general
+- http: Logs de peticiones HTTP
+- debug: Información de depuración
+
+### Archivos de Log
+- `logs/error-%DATE%.log`: Solo errores
+- `logs/combined-%DATE%.log`: Todos los logs
+- Rotación automática diaria
+- Retención de 14 días
+
+---
+
+## Características de Seguridad
+
+- Autenticación basada en JWT
+- Passwords hasheados con bcrypt
+- Validación exhaustiva de entrada de datos
+- Rate limiting en endpoints públicos
+- CORS configurado
+- Soft delete para preservar datos
+- Validación de tipos de archivo en uploads
+- Manejo seguro de errores sin exponer información sensible
+
+---
+
+## Docker
+
+### Arquitectura Multi-Stage
+
+El Dockerfile utiliza una construcción en múltiples etapas para optimizar el tamaño de la imagen:
+
+1. Base: Definición de directorio y usuario
+2. Dependencies: Instalación de dependencias de producción
+3. Build: Compilación de TypeScript
+4. Production: Imagen final optimizada
+
+### Servicios Docker Compose
+
+**mongodb**
+- Imagen: mongo:7
+- Puerto: 27017
+- Volúmenes persistentes para datos
+- Health check con mongosh
+
+**api**
+- Build desde Dockerfile local
+- Puerto: 3001
+- Depende de MongoDB
+- Ejecuta seed automáticamente al iniciar
+- Health check en endpoint /api/health
+- Volúmenes para logs y archivos subidos
+
+### Comandos Docker
 
 ```bash
-# Desarrollo
-npm run dev              # Inicia servidor en modo desarrollo con hot-reload
+# Construir sin cache
+docker-compose build --no-cache
 
-# Seed
-npm run seed             # Puebla la base de datos con datos iniciales
+# Ver logs de un servicio específico
+docker-compose logs -f mongodb
 
-# Testing (no implementado aún)
-npm test                 # Ejecuta tests
+# Ejecutar comando en contenedor
+docker exec -it inventory_api sh
+
+# Limpiar todo (contenedores, redes, volúmenes)
+docker-compose down -v
+
+# Ver recursos utilizados
+docker stats inventory_api inventory_mongodb
 ```
 
 ---
 
-##  Uso de Autenticación
+## Manejo de Errores
 
-### 1. Registrar Usuario
-```bash
-curl -X POST http://localhost:3000/api/usuarios \
-  -H "Content-Type: application/json" \
-  -d '{"email":"user@example.com","password":"123456"}'
-```
+El sistema implementa un manejo centralizado de errores con clases personalizadas:
 
-### 2. Iniciar Sesión
-```bash
-curl -X POST http://localhost:3000/api/usuarios/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"user@example.com","password":"123456"}'
-```
+**HttpError**: Clase base para errores HTTP  
+**BadRequestError**: 400 - Peticiones inválidas  
+**UnauthorizedError**: 401 - No autenticado  
+**NotFoundError**: 404 - Recurso no encontrado
 
-Respuesta:
+Todos los errores devuelven respuestas consistentes en formato JSON:
+
 ```json
 {
-  "status": 200,
-  "message": "Login exitoso",
-  "data": {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-    "user": {
-      "id": "507f1f77bcf86cd799439011",
-      "email": "user@example.com"
-    }
-  }
+  "error": "Error message",
+  "statusCode": 400,
+  "timestamp": "2025-10-18T02:30:00.000Z",
+  "path": "/api/cars"
 }
 ```
 
-### 3. Usar Token en Peticiones Protegidas
-```bash
-curl -X POST http://localhost:3000/api/autos \
-  -H "Authorization: Bearer TU_TOKEN_AQUI" \
-  -H "Content-Type: multipart/form-data" \
-  -F "marca=Toyota" \
-  -F "modelo=Corolla" \
-  -F "año=2023" \
-  -F "precio=25000" \
-  -F "kilometraje=15000" \
-  -F "email=vendedor@test.com" \
-  -F "telefono=9611879041" \
-  -F "fotografia=@/ruta/a/imagen.jpg"
-```
+---
+
+## Validación de Datos
+
+Utiliza Zod para validación declarativa y type-safe:
+
+- Validación en controllers antes de ejecutar casos de uso
+- Schemas reutilizables y componibles
+- Mensajes de error descriptivos
+- Validación de tipos, formatos y reglas de negocio
+- Transformación automática de datos
 
 ---
 
+## Desarrollo
 
+### Scripts Disponibles
 
+```bash
+npm run dev          # Modo desarrollo con hot reload
+npm run build        # Compilar TypeScript
+npm start            # Ejecutar versión compilada
+npm test             # Ejecutar tests
+npm run test:watch   # Tests en modo watch
+npm run test:coverage # Coverage de tests
+npm run seed         # Ejecutar seed de datos
+```
 
+### Configuración de TypeScript
 
+- Target: ES2022
+- Module: CommonJS
+- Strict mode habilitado
+- Decoradores experimentales habilitados
+- Path aliases configurados
+- Source maps generados
 
+### Compilación
 
-
+El proceso de build utiliza `tsc-alias` para resolver los path aliases de TypeScript en el código JavaScript compilado, permitiendo imports limpios sin rutas relativas complejas.
 

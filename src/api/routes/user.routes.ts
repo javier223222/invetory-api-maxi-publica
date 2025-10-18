@@ -2,9 +2,16 @@ import {Router,Request,Response, NextFunction} from "express";
 import { UserController } from "api/controllers";
 import { validate } from "api/middlewares";
 import { loginSchema } from "api/dtos";
+import rateLimit from "express-rate-limit";
 
-const router:Router=Router();
-const userController=new UserController();
+const loggingLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 5,
+    message: "Too many login attempts from this IP, please try again after 15 minutes"
+});
+
+const router: Router = Router();
+const userController = new UserController();
 
 /**
  * @swagger
@@ -75,6 +82,7 @@ const userController=new UserController();
  */
 router.post(
     "/login",
+    loggingLimiter,
     validate(loginSchema, 'body'),
     (req:Request,res:Response,next:NextFunction)=>userController.login(req,res,next)
 )

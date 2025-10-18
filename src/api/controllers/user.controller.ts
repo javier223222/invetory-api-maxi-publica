@@ -30,21 +30,20 @@ export class UserController {
         }
     }
 
-    public create=async(req:Request, res:Response, next:NextFunction)=>{
+    public create = async(req:Request, res:Response, next:NextFunction) => {
         try{
-            const { email, password} = req.body;
+            const { email, password } = req.body;
             if(!email || !password){
                 throw new BadRequestError("Email and password are required.");
 
             }
 
-            const createUserCase:CreateUserUseCase = new CreateUserUseCase(this.userRepository);
+            const createUserCase = new CreateUserUseCase(this.userRepository);
             const newUser = await createUserCase.execute({email, password});
             newUser.password = "";
             const response: ResponseSuccess<User> = {
-                status:201,
-                message:"User created successfully.",
-
+                status: 201,
+                message: "User created successfully.",
                 data: newUser
             };
             res.status(201).json(response);
