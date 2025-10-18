@@ -20,7 +20,7 @@ API REST para la gestión de inventario de vehículos construida con Node.js, Ty
 
 ## Descripción General
 
-Sistema backend completo para la gestión de un inventario de vehículos que permite operaciones CRUD sobre automóviles, gestión de usuarios con autenticación JWT, y catálogos de marcas, modelos y años. El proyecto implementa mejores prácticas de desarrollo, incluyendo validación de datos, manejo de errores, logging estructurado y despliegue con Docker.
+Sistema backend completo para la gestión de un inventario de vehículos que permite operaciones CRUD sobre automóviles, gestión de usuarios con autenticación JWT, y catálogos de marcas, modelos y años. El proyecto implementa mejores prácticas de desarrollo, incluyendo validación de datos, manejo de errores, logging estructurado y uso de Docker.
 
 ### Características Principales
 
