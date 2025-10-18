@@ -34,7 +34,7 @@ Sistema backend completo para la gestión de un inventario de vehículos que per
 - Rate limiting para prevención de abuso
 - Documentación interactiva con Swagger UI
 - Suite de tests automatizados con Jest
-- Despliegue containerizado con Docker Compose
+- containerizado con Docker Compose
 
 ---
 
